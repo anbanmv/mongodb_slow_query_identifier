@@ -9,10 +9,8 @@
  
 import subprocess
  
-# Define the path to the MongoDB log file
 log_file = '/var/log/mongo/mongod.log'
  
-# Define the command to process the log file
 log_processing_command = (
     "grep '[0-9]ms$' {} | "
     "sed 's/^.*\\s\\([0-9]*\)ms$/\\1 \\0/' | "
@@ -20,17 +18,14 @@ log_processing_command = (
     "sed 's/^[0-9]* //' | "
     "head -n 20"
 )
- 
-# Run the command and capture the output
+
 try:
     process = subprocess.Popen(log_processing_command.format(log_file), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     output, error = process.communicate()
  
     if process.returncode == 0:
-        # Split the output into lines
         lines = output.split('\n')
          
-        # List the top 20 slow queries
         for i, line in enumerate(lines):
             if i == 20:
                 break
